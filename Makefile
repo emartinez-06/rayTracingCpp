@@ -1,16 +1,19 @@
 CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++17
-LDFLAGS =
 TARGET = a.out
-SRCS = $(wildcard *.cpp)
-OBJS = $(SRCS:.cpp=.o)
+SRCDIR = src
+BUILDDIR = build
+
+SRCS = $(wildcard $(SRCDIR)/*.cpp)
+OBJS = $(patsubst $(SRCDIR)/%.cpp,$(BUILDDIR)/%.o,$(SRCS))
 
 $(TARGET): $(OBJS)
-	$(CXX) $(LDFLAGS) -o $@ $^
+	$(CXX) -o $@ $^
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $<
+$(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
+	mkdir -p $(BUILDDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(TARGET) $(OBJS)
+	rm -rf $(TARGET) $(BUILDDIR)
 
